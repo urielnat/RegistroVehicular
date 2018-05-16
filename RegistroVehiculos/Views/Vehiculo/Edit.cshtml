@@ -1,0 +1,217 @@
+﻿@model Conexion.MODEL.EditarVehiculoTitular
+
+@{
+    ViewBag.Title = "Editar";
+}
+
+<h2>Editar</h2>
+
+
+@using (Html.BeginForm("Edit", "Vehiculo", FormMethod.Post, new { name = "frm", id = "frm" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Editar datos del vehiculo o titular</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.id_curp, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.id_curp, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.id_curp, "", new { @class = "text-danger", onkeyup = "upper(this)" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.nombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.apellido, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.apellido, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.apellido, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.calle, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.calle, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.calle, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.numero, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.numero, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.numero, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.colonia, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.colonia, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.colonia, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.id_entidad, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.id_entidad,
+                    RegistroVehiculos.Controllers.VehiculoController.ListaEntidades(),
+                    "Seleccione una entidad",
+                    new { @class = "form-control",@id= "entidad-id" })
+                @Html.ValidationMessageFor(model => model.id_entidad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">Ciudad</label>
+            <div class="col-md-10">
+                <select id="Ciudad" name="Ciudad" class="form-control"></select>
+            </div>
+        </div>
+    
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.id_tipo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.id_tipo,
+                    RegistroVehiculos.Controllers.VehiculoController.ListaTipos(),
+                    "Seleccione un tipo de vehículo",
+                    new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.id_tipo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.marca, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.marca, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.marca, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.año, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.año, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.año, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.modelo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.modelo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.modelo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.numeroSerie, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.numeroSerie, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.numeroSerie, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.id_entidad2, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.id_entidad2,
+                    RegistroVehiculos.Controllers.VehiculoController.ListaEntidades(),
+                    "Seleccione una entidad",
+                    new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.id_entidad2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Modificar" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Volver al inicio", "Index")
+</div>
+<style>
+    .error {
+        color: red;
+    }
+</style>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+  
+    
+    <script>
+
+        $(function () {
+            $('#entidad-id').change(function () {
+                var id_entidad = $(this).val();
+                idCiudad = "@TempData["idCiudad"]";
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "@Url.Action("getCiudad", "Vehiculo")",
+                    data: "{id_entidad:'" + id_entidad + "'}",
+                    success: function (data) {
+
+                        $('#Ciudad').empty();
+                        $('#Ciudad').append('<option selected="selected" value="">Selecciona una ciudad</option>');
+                        $.each(data, function (i, d) {
+                            if (idCiudad == d.id_ciudad) {
+                                $('#Ciudad').append('<option value=' + d.id_ciudad + '>' + d.ciudad + '</option>');
+                                $('#Ciudad').attr("selected", "selected");
+                                $("div.col-md-10 #Ciudad").val(d.id_ciudad);
+                            }
+                            else
+                                $('#Ciudad').append('<option value=' + d.id_ciudad + '>' + d.ciudad + '</option>');
+                        });
+
+                    },
+                    failure: function (data) {
+                        alert('ocurrio un error');
+                    }
+
+                });
+            });
+            $('#entidad-id').trigger("change");
+        });
+        $('#frm').validate(({
+            ignore: [],
+            rules: {
+                Ciudad: {
+                    required: true
+
+                }
+            },
+            messages: {
+                Ciudad: "Seleccione una ciudad"
+
+            }
+        }));
+        function upper(obj) {
+            if (obj.value != "") {
+                obj.value = obj.value.toUpperCase();
+            }
+        }
+    </script>
+}

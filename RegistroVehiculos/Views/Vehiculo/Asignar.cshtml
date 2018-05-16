@@ -1,0 +1,82 @@
+﻿@model Conexion.MODEL.Placa
+
+@{
+    ViewBag.Title = "Asignar";
+}
+
+<h2>Asignar</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Placa</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+     
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.numeroSerie, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <label style="font-weight: normal">@Model.numeroSerie</label>
+                @Html.ValidationMessageFor(model => model.numeroSerie, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.datosVehiculo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <label style="font-weight: normal">@Model.datosVehiculo</label>
+                @Html.ValidationMessageFor(model => model.datosVehiculo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NombreTitular, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <label style="font-weight: normal">@Model.NombreTitular</label>
+                @Html.ValidationMessageFor(model => model.NombreTitular, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Asignar" id="Asignar" @Model.IsDisabled class="btn btn-default" />
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.placa, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.placa, new { htmlAttributes = new { @class = "form-control",@readonly=true } })
+                @Html.ValidationMessageFor(model => model.placa, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="Cancelar" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Vehiculo") + "'");" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Volver al inicio", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function() {
+            if(!@ViewData["IsEnabled"]) 
+                $('#Asignar').attr('disabled', 'disabled');
+            }
+        );
+
+
+    </script>
+}

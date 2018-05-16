@@ -1,0 +1,73 @@
+﻿@model Conexion.MODEL.EntidadPatron
+
+@{
+    ViewBag.Title = "Asignar patron";
+}
+
+<h2>Asignar patron</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Defina un patron para una entidad</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+     
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.id_entidad, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.id_entidad,
+                    RegistroVehiculos.Controllers.VehiculoController.ListaEntidades(),
+                    "Seleccione una entidad",
+                    new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.id_entidad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.id_tipo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.id_tipo,
+                    RegistroVehiculos.Controllers.VehiculoController.ListaTipos(),
+                    "Seleccione un tipo de vehículo",
+                    new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.id_tipo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.patron, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.patron, new { htmlAttributes = new { @class = "form-control", onkeyup = "upper(this)" } })
+                <p style="color:cornflowerblue">Es necesario establecer un patron alfanumerico, donde X representa un valor de a la A la Z y el 0 un número del 0 al 9, los espacios son represendos por guiones.</p>
+                @Html.ValidationMessageFor(model => model.patron, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Asignar" class="btn btn-default" />
+                <input type="submit" value="Cancelar" formnovalidate class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Vehiculo") + "'");" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Volver al inicio", "Index","Vehiculo")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        function upper(obj) {
+            if (obj.value != "") {
+                obj.value = obj.value.toUpperCase();
+            }
+        }
+    </script>
+}

@@ -1,0 +1,399 @@
+﻿@model Conexion.MODEL.Reserva
+
+@{
+    ViewBag.Title = "Reserva de placas";
+}
+
+<h2>Reserva de placas</h2>
+
+
+@using (Html.BeginForm("Create","Reserva", FormMethod.Post, new { name = "frm", id = "frm" })) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Reserva de placas</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+       
+        <div class="form-group">
+            @Html.LabelFor(model => model.id_entidad, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.id_entidad,
+                    RegistroVehiculos.Controllers.VehiculoController.ListaEntidades(),
+                    "Seleccione una entidad",
+                    new { @class = "form-control",id="entidad" })
+                @Html.ValidationMessageFor(model => model.id_entidad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.id_tipo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select id="id_tipo"  name="id_tipo" class="form-control"></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.id_patron, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input readonly="true" id="id_patron" name="id_patron" class="form-control">
+                 @Html.ValidationMessageFor(model => model.id_patron, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.inicio, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input class="form-control" id="INICIO" name="INICIO" onkeyup="upper(this);"  />
+                @Html.ValidationMessageFor(model => model.inicio, "", new { @class = "text-danger",@id="error" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.fin, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input class="form-control" id="FIN" NAME="FIN" onkeyup="upper(this);" />
+                @Html.ValidationMessageFor(model => model.fin, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+     
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.cantidad, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input class="form-control" id="TOTAL" name="TOTAL" readonly="true" />
+                @Html.ValidationMessageFor(model => model.cantidad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Reservar" class="btn btn-default" />
+                <input type="submit" value="Cancelar" formnovalidate  class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Vehiculo") + "'");" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Volver al inicio", "Index")
+</div>
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<style>
+    .error {
+        color: red;
+    }
+</style>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+  
+    <script>
+        $(function() {
+            $('#entidad').change(function() {
+                $('#INICIO').val("");
+                $('#FIN').val("");
+                $('#id_patron').val("");
+                $('#TOTAL').val("0");
+                var id_entidad = $(this).val();
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: '@Url.Action("getTipo", "Reserva")',
+                    data: "{id_entidad:'" + id_entidad + "'}",
+                    success: function(data) {
+                        $('#id_tipo').empty();
+                        $('#id_tipo')
+                            .append('<option selected="selected" value="">Selecciona un tipo de vehiculo</option>')
+                        $.each(data,
+                            function(i, d) {
+                                $('#id_tipo').append('<option value=' + d.id_tipo + '>' + d.tipo + '</option>');
+                            });
+
+                    },
+                    failure: function(data) {
+                        alert('ocurrio un error');
+                    }
+
+                });
+            });
+        });
+
+
+        $(function() {
+            $('#id_tipo').change(function() {
+                var id_tipo = $(this).val();
+                var id_entidad = $('#entidad').val();
+                $('#INICIO').val("");
+                $('#FIN').val("");
+                $('#id_patron').val("");
+                $('#TOTAL').val("0");
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: '@Url.Action("getPatron", "Reserva")',
+                    data: "{id_tipo:'" + id_tipo + "',id_entidad:'" + id_entidad + "'}",
+                    success: function(data) {
+                        $('#id_patron').empty();
+                        $.each(data,
+                            function(i, d) {
+                                //$('#id_patron').append('<option value=' + d.id_patron + '>' + d.patron + '</option>');
+                                $('#id_patron').val(d.patron);
+
+                            });
+
+
+                    },
+                    failure: function(data) {
+                        alert('ocurrio un error');
+                    }
+
+                });
+            });
+        });
+
+
+        $("#FIN").change(function() {
+
+
+            var AZ = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split('');
+            var cantidad = [];
+            var encontro = false;
+            var encontro2 = false;
+            var cantini = [];
+            var total = "";
+            var valor = $("#FIN").val().replace(/-/g, "");
+            var valor2 = $("#INICIO").val().replace(/-/g, "").split('');
+            var placa = "";
+            for (var i = 0; i < valor.length; i++) {
+
+                for (var j = 0; j < AZ.length; j++) {
+                    if (valor[i] == AZ[j]) {
+                        cantidad.push(j);
+                        encontro = true;
+
+                        break;
+                    } else {
+                        encontro = false;
+                    }
+
+                }
+                if (!encontro) {
+
+                    cantidad.push(valor[i]);
+
+                }
+
+            }
+
+
+            for (var K = 0; K < valor2.length; K++) {
+
+                for (var l = 0; l < AZ.length; l++) {
+                    if (valor2[K] == AZ[l]) {
+                        cantini.push(l);
+                        encontro2 = true;
+
+                        break;
+                    } else {
+                        encontro2 = false;
+                    }
+
+                }
+                if (!encontro2) {
+
+                    cantini.push(valor2[K]);
+
+                }
+
+            }
+
+            if (cantini.length == cantidad.length) {
+                for (var x = 0; x < cantidad.length; x++) {
+                    total += Math.abs((cantidad[x] - cantini[x])).toString();
+                }
+            }
+
+
+            //////////prueba
+            //var itereacion = 0;
+            //var AZ = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split('');
+            //while (true) {
+
+
+            //    valor2.reverse();
+             
+
+
+            //    for (var i = 0; i < valor2.length; i++) {
+
+            //        if (!Number.isInteger(valor2[i])) {
+
+
+            //            for (var j = 0; j < AZ.length; j++) {
+                           
+            //                if (j + 1 != AZ.length && valor2[i] == AZ[j] && valor2[i] != 'Z') {
+            //                    valor2[i] = AZ[j + 1];
+                                
+            //                    break;
+            //                } 
+
+            //            }
+
+            //            if (valor2[i] === 'Z' && i + 1 !== valor2.length) {
+            //                valor2[i] = 'A';
+
+
+            //            } else break;
+
+
+            //        } else if (valor2[i] !== '9') {
+
+            //            valor2[i] = (valor2[i] + 1);
+
+            //            break;
+            //        } else if (i + 1 !== valor2.length) {
+            //            valor2[i] = '0';
+
+            //        } else {
+            //            break;
+            //        }
+
+            //    }
+
+
+            //    valor2.reverse();
+            //    var placaGenerada = "";
+
+
+            //    for (var x = 0; x < valor2.length; x++) {
+
+            //        placaGenerada += valor2[x];
+
+            //    }
+
+            //    placa = placaGenerada;
+            //    if (placa === valor) {
+
+            //        break;
+            //    } else {
+            //        itereacion++;
+
+            //    }
+
+
+            //}
+
+
+            var final =  Number(cantidad);
+            var inicial =  Number(cantini);
+
+            $("#TOTAL").val(Number(total));
+
+
+            //VALIDAR PATRON
+            var patron = $('#id_patron').val();
+            var arreglo = patron.split('');
+            patron = "^";
+
+            for (var i = 0; i < arreglo.length; i++) {
+                if (arreglo[i] === 'X') {
+                    patron += "[A-Z]";
+                }
+                if (arreglo[i] === '0') {
+                    patron += "[0-9]";
+                }
+                if (arreglo[i] === '-') {
+                    patron += "-";
+                }
+            }
+            patron += "$";
+            $("#FIN").rules("add", { regex: patron });
+
+
+        });
+
+
+        function upper(obj) {
+            if (obj.value != "") {
+                obj.value = obj.value.toUpperCase();
+            }
+        }
+
+
+        $('#frm').validate(({
+            rules: {
+                "FIN": {
+                    CFIN: true,
+                    required: true
+                },
+                "TOTAL": {
+                    required: true,
+                    min: 1
+                },
+                "INICIO": {
+                    required: true,
+                 
+                }
+            },
+            messages: {
+                TOTAL: "La cantidad no puede ser menor a 1",
+                FIN: "El campo es requerido",
+                INICIO: "El campo es requerido"
+
+            }
+        }));
+
+
+        $.validator.addMethod("CFIN",
+            function(value, element, param) {
+
+                var val_a = $("#INICIO").val();
+               
+                return this.optional(element) || (value >= val_a);
+            },
+            function(params, element) {
+                return "La cantidad final no puede ser menor a la inicial";
+            });
+
+
+        $('#INICIO').change(function() {
+            var patron = $('#id_patron').val();
+            var arreglo = patron.split('');
+            patron = "^";
+
+            for (var i = 0; i < arreglo.length; i++) {
+                if (arreglo[i] === 'X') {
+                    patron += "[A-Z]";
+                }
+                if (arreglo[i] === '0') {
+                    patron += "[0-9]";
+                }
+                if (arreglo[i] === '-') {
+                    patron += "-";
+                }
+            }
+            patron += "$";
+            $("#INICIO").rules("add", { regex: patron });
+        });
+
+        $.validator.addMethod(
+            "regex",
+            function(value, element, regexp) {
+                var re = new RegExp(regexp);
+                return this.optional(element) || re.test(value);
+            },
+            "El patron no concuerda"
+        );
+
+    </script>
+}

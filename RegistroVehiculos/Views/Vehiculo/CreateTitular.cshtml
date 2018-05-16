@@ -1,0 +1,206 @@
+﻿@model Conexion.MODEL.Titular
+
+@{
+    ViewBag.Title = "Dar de alta titular";
+}
+
+<h2>Dar de alta titular</h2>
+
+
+@using (Html.BeginForm("CreateTitular", "Vehiculo", FormMethod.Post, new { name = "frm", id = "frm" })) 
+{
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+        <h4>Titular</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.id_curp, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.id_curp, new { htmlAttributes = new { @class = "form-control", onkeyup = "upper(this)" } })
+                <input type="submit" name="command" value="Buscar"   formnovalidate="formnovalidate"  class="btn btn-default cancel"/>
+                @Html.ValidationMessageFor(model => model.id_curp, "", new { @class = "text-danger" })
+            </div>
+           
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.nombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.apellido, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.apellido, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.apellido, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.calle, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.calle, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.calle, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.numero, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.numero, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.numero, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.colonia, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.colonia, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.colonia, "", new { @class = "text-danger" ,id="colonia"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.id_entidad, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.id_entidad,
+                    RegistroVehiculos.Controllers.VehiculoController.ListaEntidades(),
+                    "Seleccione una entidad",
+                    new { @class = "entidad-id form-control" })
+                @Html.ValidationMessageFor(model => model.id_entidad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.id_ciudad, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.id_ciudad,
+                   new SelectList(Enumerable.Empty<SelectListItem>(), "id_ciudad", "ciudad"),"Seleccione una ciudad",
+                    new { @class = "entidad-id form-control",@id="Ciudad" })
+                @Html.ValidationMessageFor(model => model.id_entidad, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">Ciudad</label>
+            <div class="col-md-10">
+                <select id="Ciudad" name="Ciudad" class="form-control"  ></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" name="command" value="Anterior"  class="btn btn-default" />
+                <input type="submit" name="command" value="Guardar"  class="btn btn-default"/>
+                <input type="submit" name="command" value="Cancelar"  onclick="@("window.location.href='" + @Url.Action("Index", "Vehiculo") + "'");" class="btn btn-default"/>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Volver al inicio", "Index")
+</div>
+
+<style>
+    .error {
+        color: red;
+    }
+</style>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+
+    <script>
+        $(function () {
+            $('.entidad-id').change(function () {
+                var id_entidad = $(this).val();
+                var idCiudad = "@TempData["idCiudad"]";
+
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "getCiudad",
+                    data: "{id_entidad:'" + id_entidad + "'}",
+                    success: function (data) {
+                        
+
+                        $('#Ciudad').empty();
+                        $('#Ciudad').append('<option value="">Selecciona una ciudad</option>');
+                     
+                        $.each(data,
+                            function (i, d) {
+
+                                if (idCiudad == d.id_ciudad) {
+                                    $('#Ciudad').append('<option value=' + d.id_ciudad + '>' + d.ciudad + '</option>');
+                                    $('#Ciudad').attr("selected", "selected");
+                                    $("div.col-md-10 #Ciudad").val(d.id_ciudad);
+                                }
+                                else
+                                    $('#Ciudad').append('<option value=' + d.id_ciudad + '>' + d.ciudad + '</option>');
+                            });
+                        
+
+                    },
+                    failure: function (data) {
+                        alert('ocurrio un error');
+                    }
+
+
+                });
+            });
+
+           
+            $('.entidad-id').trigger("change");
+        });
+        $("#colonia").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '@Url.Action("AutocompCol", "Vehiculo")',
+                    dataType: "json",
+                    data: { bus: $("#colonia").val() },
+                    success: function (data) {
+                        response($.map(data,
+                            function (item) {
+                                return { label: item.Text };
+                            }));
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error");
+                    }
+                });
+            }
+        });
+
+        function upper(obj) {
+            if (obj.value != "") {
+                obj.value = obj.value.toUpperCase();
+            }
+        }
+
+        $('#frm').validate(({
+            ignore: [],
+            rules: {
+                Ciudad: {
+                    required: true
+
+                }
+            },
+            messages: {
+                Ciudad: "Seleccione una ciudad"
+
+            }
+        }));
+    </script>
+}
